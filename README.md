@@ -524,13 +524,13 @@ The FPS Bomb Simulator has be built to easily replace parts that wear over time.
 
 4.  Push buttons
 
-![](media/image1.jpeg)![](media/image2.jpeg)
+![](media/image1.jpeg)   ![](media/image2.jpeg)
 
-**Figure 1: 4x4 Keypad Figure 2: 20x4 I2C LCD**
+**Figure 1: 4x4 Keypad               Figure 2: 20x4 I2C LCD**
 
-![](media/image3.jpeg) ![](media/image4.jpeg)
+![](media/image3.jpeg)     ![](media/image4.jpeg)
 
-Figure 3: Red LED PST Figure 4: Green LED SPT
+**Figure 3: Red LED PST      Figure 4: Green LED SPT**
 
 Button Button
 
