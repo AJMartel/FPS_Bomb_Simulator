@@ -202,10 +202,14 @@ LaserTag Module (http://www.lasertagparts.com/mtformat-2.htm)
 - [Arduino stackexchange.com](https://arduino.stackexchange.com/questions/14647/how-can-i-detect-a-disconnected-pin)
 - [Electronics stackexchange.com](https://electronics.stackexchange.com/questions/83133/arduino-digitalread-reading-wrong)
 
-### What's left on the project (as of 17/05/2019):
+### What's left on the project (as of 18/01/2020):
 - [ ] Finish writing and upload the source code (currently v1.71)
+  - [ ] See BUGs for current issues
 - [ ] ReDesign and print circuit board then sent to China for fabrication
-- [ ] Build the actual device using PCB
+  - [ ] Required to use all available functionality of the device (version 1.2)
+- [x] Build the actual device using PCB
+  - [x] Currently working BETA Model PCB version 1.1
+  - [ ] Build with new PCB version 1.2
 - [ ] Install and calibrate system
+  - [ ] See BUGs for current issues
 - [ ] Write and publish instructables page
-- [ ] Make README.md prettier by turning it into a gh-page
