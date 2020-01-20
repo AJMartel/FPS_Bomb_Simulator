@@ -154,9 +154,9 @@ Cutwire Module
      - [x] wireFaster => "timeMultiplier = 2" variable to increase game clock  to double the speed
      - [ ] wireSlower => "timeMultiplier = 1" variable to set game clock speed to the original speed
 - [ ] use 2 variables to change game timer speed 
-  - ``` c
-  currentMillis = ((millis() - startMillis) * timeMultiplier ); 
-  ```
+``` c
+currentMillis = ((millis() - startMillis) * timeMultiplier ); 
+```
 
 Added pins to control the Button LEDs 
 - [ ] Requires FPS-Bomb-Mega-Shield-v1.2+ shield changed to reflect changes
