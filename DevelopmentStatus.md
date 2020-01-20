@@ -45,7 +45,7 @@ Configurable up to 5 Languages
      * possibly the MPU6050 i2c module to replace the sw420 Module
 
 ### Currently 4 Game modes for FPS (Airsoft/Paintball/LaserTag) 
-  [Search and Destroy](#Search and Destroy)
+  - **Search and Destroy**
   - **Sabotage**
   - **Domination**
   - **Armed!**
