@@ -1,6 +1,6 @@
 **3DFabXYZ.com**
 
-**Arduino based Airsoft/LaserTag/Nerf/Paintball FPS Bomb Simulator**
+**Arduino based Airsoft/LaserTag/MilSim/Nerf/Paintball FPS Bomb Simulator**
 
 Basic, Professional and Modules
 
@@ -92,7 +92,7 @@ English
 
 # Introduction
 
-The FPS Bomb Simulator is a device that is meant to bring the excitement of console games such as Battlefield ™, Call of Duty™, and CounterStrike™ to real life. The FPS Bomb Simulator can augment any Airsoft, Paintball, Milsim or Laser-tag game, especially for players who love the game type in which Terrorists and Counter-terrorists battle against each other to plant and/or defuse a bomb. The Domination game mode is perfect for those that are more into a “King of the Hill” type games. The “Armed\!” game mode with the “Passcode” enabled could also be used in an Escape Room scenario, find clues to get the passcode before it explodes\!
+The FPS Bomb Simulator is a device that is meant to bring the excitement of console games such as Battlefield ™, Call of Duty™, CounterStrike™, and Team Fortress™ to real life. The FPS Bomb Simulator can augment any Airsoft, LaserTag, MilSim, Nerf, Paintball game, especially for players who love the game type in which Terrorists and Counter-terrorists battle against each other to plant and/or defuse a bomb. The Domination and Conquered game modes are perfect for those that are more into a “King of the Hill” type games. The “Armed\!” game mode with the “Passcode” enabled could also be used in an Escape Room scenario, find clues to get the passcode before it explodes\!
 
 # Package contents
 
