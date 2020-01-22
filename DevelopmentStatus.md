@@ -1,11 +1,11 @@
- # 3DFabXYZ.com FPS Bomb Simulator v1.X
-Starting point for this project was unlicenced [source code](https://github.com/yinbot/Airsoft-BombPro)
+[comment]: # (Start Markdown Notes)
+# 3DFabXYZ.com FPS Bomb Simulator v1.X
 ## MEGA/MEGA2560 BASIC Model:
 - Sketch uses 36298 bytes (14%) of program storage space. Maximum is 253952 bytes.
 - Global variables use 1231 bytes (15%) of dynamic memory, leaving 6961 bytes for local variables. Maximum is 8192 bytes.
 
 ### Language Menu
-Configurable up to 5 Languages 
+Configurable up to 5 Languages
  - "English"
  - "French"
  - "Spanish"
@@ -44,13 +44,15 @@ Configurable up to 5 Languages
    * Future Development
      * possibly the MPU6050 i2c module to replace the sw420 Module
 
-### Currently 4 Game modes for FPS (Airsoft/Paintball/LaserTag) 
+### Currently 4 Game modes for FPS (Airsoft/Paintball/LaserTag)
   - **Search and Destroy**
   - **Sabotage**
   - **Domination**
   - **Armed!**
-### and 1 Game mode for Escape Rooms 
+### and 1 Game mode for Escape Rooms
   - **Escape Room**
+### Proposed Game mode
+  - **Conquered**
 
 ##    Search and Destroy
     In this mode the device acts as a bomb.
@@ -135,36 +137,52 @@ Configurable up to 5 Languages
       1.  The bomb time expires and the GREEN team was unsuccessful in disarming the bomb, and the bomb detonates; Game Over.
       2.  The GREEN team succeeds in disarming the bomb; The Key Box Opens.
 
+##    Conquered (Proposed/In development)
+    In this mode the device acts as a base.
+    The goal is to be in control of the base with a total Captured time equal to a specified time.
+    The Red button Captures the zone for the RED Team.
+    The Red button Neutralizes a GREEN zone.
+    The Green button Captures the zone for the GREEN Team.
+    The Green button Neutralizes a RED zone.
+      a.  When the game starts, the base is a Neutral (BLUE) Zone.
+      b.  The objective for both (GREEN and RED) teams is to capture the base.
+      c.  Once the base is captured, the controlling team's time is displayed on screen.
+      d.  While the base is neutral no time is decreased for either Red or Green teams.
+      e.  Game can be configured to Neutralize the Zone after a set time => forces teams to patrol the zone to keep control.
+      f.  When auto neutralize zone is enabled teams can recapture the zone to reset the auto neutralize time.
+    The only way to win is:
+      1.  The team that has a total time in control of the base equal to the specified time wins.
+
 ####    To test
 - [ ] DTMF (Telephone Keypad Sound) funtion requires Shield version 1.2+
-    
+
 Domination game mode
-- [ ] Reset Auto-Neutralize timer from last captured button press
+- [x] Reset Auto-Neutralize timer from last captured button press
 - [ ] Red/Green buttons Blink when in control of zone (requires hardware v1.2+, Hardware v1.1 is always on)
 - [ ] Winning Team's Button lights up at end of game (requires hardware v1.2+, Hardware v1.1 is always on)
-    
+
 Sound with YX5300 => use hardwareserial for ATMEGA2650
 - [ ] Currently only available under "settings => test sound"
 - [ ] Set Volume Level integrated into settings menu
-    
-Cutwire Module 
+
+Cutwire Module
 - [ ] RandomWireGen optimized code, now sets the following variables
      - [x] wireDisarm
      - [x] wireExplode
      - [x] wireFaster => "timeMultiplier = 2" variable to increase game clock  to double the speed
      - [ ] wireSlower => "timeMultiplier = 1" variable to set game clock speed to the original speed
-- [ ] use 2 variables to change game timer speed 
-     - ``` currentMillis = ((millis() - startMillis) * timeMultiplier ); ```
+- [ ] use 2 variables to change game timer speed
+  - ``` "currentMillis = ((millis() - startMillis) * timeMultiplier );" ```
 
-Added pins to control the Button LEDs 
+Added pins to control the Button LEDs
 - [ ] Requires FPS-Bomb-Mega-Shield-v1.2+ shield changed to reflect changes
 
-Board ID 
+Board ID
 - [x] Variables and Function created **shieldVersion** Value
-    
+
 Escape Room game mode
 - [x] Added servo for Escape Room gamemode (Servo will unlock a box holding a key, Used for "Escape Rooms")
-- [x] replaced display names 
+- [x] replaced display names
   - ```"Green team" ==> "Captives"```
   - ```"Red team" ==> "Jailers"```
 
@@ -175,7 +193,8 @@ LaserTag Module (http://www.lasertagparts.com/mtformat-2.htm)
 ### To Do
 
   **Program space is limited use ATmega2650 to add the rest of the options:**
-  
+
+  - [ ] Add Game mode "Conquered" Domination type game, game ends when counter reaches zero
   - [ ] Add difficulty must press a button to activate arm/disarm button?? Reqires hardware modification.
   - [ ] 12864 Graphic LCD Module
     - [ ] Support non-English characters
@@ -192,9 +211,13 @@ LaserTag Module (http://www.lasertagparts.com/mtformat-2.htm)
     - [ ] Area Domination
     - [ ] Capture the Flag
   - [ ] Add GPS?? to enable finding the device
+  - [ ] Make a youtube video to demonstrate this project
+  - [ ] Come up with a cooler name for this than "FPS Bomb Simulator"
+  - [ ] Add settings for each Game Mode that are accessible at boot time
 
 ### BUGs
 - [ ] Green LED always on juring game play
+  -[x] Use alternate pins (on Timer 5)
 - [ ] Static sound on **loudTone** pin
 
 ### Notes
@@ -213,3 +236,5 @@ LaserTag Module (http://www.lasertagparts.com/mtformat-2.htm)
 - [ ] Install and calibrate system
   - [ ] See BUGs for current issues
 - [ ] Write and publish instructables page
+
+[comment]: # (End Markdown Notes)
