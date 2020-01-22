@@ -1,6 +1,6 @@
 **3DFabXYZ.com**
 
-**Arduino based Airsoft-Paintball FPS Bomb Simulator**
+**Arduino based Airsoft/LaserTag/Nerf/Paintball FPS Bomb Simulator**
 
 Basic, Professional and Modules
 
