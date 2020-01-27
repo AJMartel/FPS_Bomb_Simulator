@@ -1,8 +1,8 @@
 [comment]: # (Start Markdown Notes)
 # 3DFabXYZ.com FPS Bomb Simulator v1.X
-## MEGA/MEGA2560 BASIC Model:
-- Sketch uses 36298 bytes (14%) of program storage space. Maximum is 253952 bytes.
-- Global variables use 1231 bytes (15%) of dynamic memory, leaving 6961 bytes for local variables. Maximum is 8192 bytes.
+## MEGA2560 BASIC Model:
+- Sketch uses 37338 bytes (14.7%) of program storage space. Maximum is 253952 bytes.
+- Global variables use 1235 bytes (15.1%) of dynamic memory, leaving 6957 bytes for local variables. Maximum is 8192 bytes.
 
 ### Language Menu
 Configurable up to 5 Languages
@@ -44,15 +44,15 @@ Configurable up to 5 Languages
    * Future Development
      * possibly the MPU6050 i2c module to replace the sw420 Module
 
-### Currently 4 Game modes for FPS (Airsoft/Paintball/LaserTag)
+### Currently 5 Game modes for FPS (Airsoft/LaserTag/Nerf/Paintball)
   - **Search and Destroy**
   - **Sabotage**
-  - **Domination**
   - **Armed!**
+  - **Domination**
+  - **Conquered**
+
 ### and 1 Game mode for Escape Rooms
   - **Escape Room**
-### Proposed Game mode
-  - **Conquered**
 
 ##    Search and Destroy
     In this mode the device acts as a bomb.
@@ -93,21 +93,6 @@ Configurable up to 5 Languages
       1.  The Game time expires and the RED team was unsuccessful in placing and arming the bomb; the GREEN team wins.
       2.  The RED team was successful in placing and arming the bomb, the GREEN team fails to disarm it and the bomb detonates; The RED team wins.
 
-##    Domination
-    In this mode the device acts as a base.
-    The Red button Captures the zone for the RED Team.
-    The Red button Neutralizes a GREEN zone.
-    The Green button Captures the zone for the GREEN Team.
-    The Green button Neutralizes a RED zone.
-      a.  When the game starts, the base is a Neutral (BLUE) Zone.
-      b.  The objective for both (GREEN and RED) teams is to capture the base.
-      c.  Once the base is captured, the controlling team's time is displayed on screen.
-      d.  While the base is neutral no time is accumulated for either Red or Green teams.
-      e.  Game can be configured to Neutralize the Zone after a set time => forces teams to patrol the zone to keep control.
-      f.  When auto neutralize zone is enabled teams can recapture the zone to reset the auto neutralize time.
-    The only way to win is:
-      1.  The team with the highest total time in control of the base wins.
-
 ##    Armed!
     In this mode the device acts as a planted bomb.
     When the "button" mode is used:
@@ -137,7 +122,22 @@ Configurable up to 5 Languages
       1.  The bomb time expires and the GREEN team was unsuccessful in disarming the bomb, and the bomb detonates; Game Over.
       2.  The GREEN team succeeds in disarming the bomb; The Key Box Opens.
 
-##    Conquered (Proposed/In development)
+##    Domination
+    In this mode the device acts as a base.
+    The Red button Captures the zone for the RED Team.
+    The Red button Neutralizes a GREEN zone.
+    The Green button Captures the zone for the GREEN Team.
+    The Green button Neutralizes a RED zone.
+      a.  When the game starts, the base is a Neutral (BLUE) Zone.
+      b.  The objective for both (GREEN and RED) teams is to capture the base.
+      c.  Once the base is captured, the controlling team's time is displayed on screen.
+      d.  While the base is neutral no time is accumulated for either Red or Green teams.
+      e.  Game can be configured to Neutralize the Zone after a set time => forces teams to patrol the zone to keep control.
+      f.  When auto neutralize zone is enabled teams can recapture the zone to reset the auto neutralize time.
+    The only way to win is:
+      1.  The team with the highest total time in control of the base wins.
+
+##    Conquered
     In this mode the device acts as a base.
     The goal is to be in control of the base with a total Captured time equal to a specified time.
     The Red button Captures the zone for the RED Team.
@@ -194,7 +194,7 @@ LaserTag Module (http://www.lasertagparts.com/mtformat-2.htm)
 
   **Program space is limited use ATmega2650 to add the rest of the options:**
 
-  - [ ] Add Game mode "Conquered" Domination type game, game ends when counter reaches zero
+  - [x] Add Game mode "Conquered" Domination type game, game ends when counter reaches zero
   - [ ] Add difficulty must press a button to activate arm/disarm button?? Reqires hardware modification.
   - [ ] 12864 Graphic LCD Module
     - [ ] Support non-English characters
@@ -225,8 +225,8 @@ LaserTag Module (http://www.lasertagparts.com/mtformat-2.htm)
 - [Arduino stackexchange.com](https://arduino.stackexchange.com/questions/14647/how-can-i-detect-a-disconnected-pin)
 - [Electronics stackexchange.com](https://electronics.stackexchange.com/questions/83133/arduino-digitalread-reading-wrong)
 
-### What's left on the project (as of 18/01/2020):
-- [ ] Finish writing and upload the source code (currently v1.71)
+### What's left on the project (as of 2020/01/22):
+- [ ] Finish writing and upload the source code (currently v1.76)
   - [ ] See BUGs for current issues
 - [ ] ReDesign and print circuit board then sent to China for fabrication
   - [ ] Required to use all available functionality of the device (version 1.2)
