@@ -1,8 +1,8 @@
 [comment]: # (Start Markdown Notes)
 # 3DFabXYZ.com FPS Bomb Simulator v1.X
 ## MEGA2560 BASIC Model:
-- Sketch uses 37338 bytes (14.7%) of program storage space. Maximum is 253952 bytes.
-- Global variables use 1235 bytes (15.1%) of dynamic memory, leaving 6957 bytes for local variables. Maximum is 8192 bytes.
+- Sketch uses 38472 bytes (15%) of program storage space. Maximum is 253952 bytes.
+- Global variables use 1241 bytes (15%) of dynamic memory, leaving 6951 bytes for local variables. Maximum is 8192 bytes.
 
 ### Language Menu
 Configurable up to 5 Languages
@@ -18,16 +18,17 @@ Configurable up to 5 Languages
 1. **Cutwire Module** (4 wires)
    - Not available in Domination and EscapeRoom modes.
    - Cutwire module will be disabled if any wires are not connected before the bomb is armed.
-   - Plug in 4 wires (Red to Black connector), if wires are not connected the Cut wire option will not function.
+     - Plug in 4 wires (Red to Black connector), if wires are not connected the Cut wire option will not function.
         - 1 wire is randomly selected each game to "Disarm the bomb".
         - 1 wire is randomly selected each game to "Explode the bomb".
         - 1 wire is randomly selected each game to "Speedup the bomb timer".
-        - 1 wire is randomly selected each game to "Slowdown the bomb timer".
+        - 1 wire is randomly selected each game to "Nothing".
         - If all wires are cut at the same time the bomb will explode.
 2. **Relay Module** (4 ports)
    - the first 3 sockets can be used to power 3 externally attached lights, mirroring the RGB LED indicator
    - the 4th can be used to power a plug in device for the "Bang" when the bomb explodes (example: smoke machine)
 3. **Servo Key Box** enables Escape Room game mode
+**Remaining devices are in development (current or Future)**
 4. **Sound with YX5300** (Currently in Development) will use hardwareserial1 on ATMega2560
 5. **Laser Tag IR Module** (Currently in Hardware Development) uses the "MilesTag II Data Protocol"
 6. **Wireless modules**
@@ -36,15 +37,17 @@ Configurable up to 5 Languages
      * using hardwareserial2 on ATMega2560
        - Wireless Master
        - Wireless Numbered Slave (Multiple slaves possible)
-       - Add 2 new game modes
+       - Add 4 new game modes
          - Area Domination
+         - Area Conquered
          - Capture the Flag
-7. **sw420 Module** shock/vibration sensor.
+         - Pandemic (Virus transport)
+7. **sw420 Module** shock/vibration sensor. (Currently implimented code, not recomending release)
 8. **Accelerometer**
    * Future Development
      * possibly the MPU6050 i2c module to replace the sw420 Module
 
-### Currently 5 Game modes for FPS (Airsoft/LaserTag/Nerf/Paintball)
+### Currently 5 Game modes for FPS (Airsoft/Paintball/LaserTag)
   - **Search and Destroy**
   - **Sabotage**
   - **Armed!**
@@ -154,6 +157,8 @@ Configurable up to 5 Languages
       1.  The team that has a total time in control of the base equal to the specified time wins.
 
 ####    To test
+- [ ] Quick Game Menus
+
 - [ ] DTMF (Telephone Keypad Sound) funtion requires Shield version 1.2+
 
 Domination game mode
@@ -161,17 +166,17 @@ Domination game mode
 - [ ] Red/Green buttons Blink when in control of zone (requires hardware v1.2+, Hardware v1.1 is always on)
 - [ ] Winning Team's Button lights up at end of game (requires hardware v1.2+, Hardware v1.1 is always on)
 
-Sound with YX5300 => use hardwareserial for ATMEGA2650
+Sound with YX5300 => use hardwareSerial for ATMEGA2650
 - [ ] Currently only available under "settings => test sound"
 - [ ] Set Volume Level integrated into settings menu
 
 Cutwire Module
-- [ ] RandomWireGen optimized code, now sets the following variables
+- [x] RandomWireGen optimized code, now sets the following variables
      - [x] wireDisarm
      - [x] wireExplode
      - [x] wireFaster => "timeMultiplier = 2" variable to increase game clock  to double the speed
-     - [ ] wireSlower => "timeMultiplier = 1" variable to set game clock speed to the original speed
-- [ ] use 2 variables to change game timer speed
+     - [x] wireSlower => "Nothing"
+- [x] use variable to change game timer speed
   - ``` "currentMillis = ((millis() - startMillis) * timeMultiplier );" ```
 
 Added pins to control the Button LEDs
@@ -188,53 +193,74 @@ Escape Room game mode
 
 LaserTag Module (http://www.lasertagparts.com/mtformat-2.htm)
 - [x] Code created for IR pulse (Explode Player), integrated menu code to enable option
-- [ ] Created hardware changes [Driving IR from Arduino pin](https://www.analysir.com/blog/2014/10/03/driving-infrared-led-directly-arduino-pin/)
 
 ### To Do
 
-  **Program space is limited use ATmega2650 to add the rest of the options:**
+  **Due to Program space using ATmega2650 to add the remaining options:**
 
-  - [x] Add Game mode "Conquered" Domination type game, game ends when counter reaches zero
-  - [ ] Add difficulty must press a button to activate arm/disarm button?? Reqires hardware modification.
-  - [ ] 12864 Graphic LCD Module
-    - [ ] Support non-English characters
-  - [ ] Sound Module
+  - [x] Add settings for each Game Mode that are accessible at boot time
+    - [ ] Test each quick game
+  - [ ] MP3 Sound Module
     - [x] Create function
     - [ ] Integrate into game modes.
     - [ ] Create sound files for different languages
+
+  **FPS Bomb Simulator Board v1.2+**
+  - Add **Servo Key Box** for Escape Room game mode
+  - LaserTag Module
+    - [ ] Create hardware changes [Driving IR from Arduino pin](https://www.analysir.com/blog/2014/10/03/driving-infrared-led-directly-arduino-pin/)
+  - [ ] Create 2nd separate board for Pro edition
+    - [ ] Move Wireless Module to 2nd separate board
+      - [ ] Wireless LoRa modules, "E32 915T20D" => up to 3km, "E32 915T30D" => up to 8km
+	    - [ ] Wireless Master
+	    - [ ] Wireless Numbered Slave
+	      - [ ] Multi Slave to Master
+	    - [ ] Add 3 game modes for wireless play:
+	      - [ ] Area Domination
+          - [ ] Capture the Flag
+          - [ ] Epidemic
+    - [ ] Move SPI GLCD Module to 2nd separate board
+      - [ ] 12864 Graphic LCD Module
+      - [ ] Support for non-English characters
+  - [ ] Add difficulty must press a button to activate arm/disarm button?? Reqires major hardware modifications.
   - [ ] Accelerometer MPU6050 i2c module to replace sw420 vibration sensor
-  - [ ] Wireless LoRa modules, "E32 915T20D" => up to 3km, "E32 915T30D" => up to 8km
-    - [ ] Wireless Master
-    - [ ] Wireless Numbered Slave
-      - [ ] Multi Slave to Master
-   - [ ] Add 2 game modes for wireless play:
-    - [ ] Area Domination
-    - [ ] Capture the Flag
   - [ ] Add GPS?? to enable finding the device
-  - [ ] Make a youtube video to demonstrate this project
-  - [ ] Come up with a cooler name for this than "FPS Bomb Simulator"
-  - [ ] Add settings for each Game Mode that are accessible at boot time
 
 ### BUGs
-- [ ] Green LED always on juring game play
-  -[x] Use alternate pins (on Timer 5)
-- [ ] Static sound on **loudTone** pin
+- [x] Green LED always on juring game play, changed pins fixed issue
+- [ ] Static sound on **tonePin2** pin
 
 ### Notes
 - [Air Open Soft](http://www.soft-r.fr/index.php?p=accueil)
 - [Arduino stackexchange.com](https://arduino.stackexchange.com/questions/14647/how-can-i-detect-a-disconnected-pin)
 - [Electronics stackexchange.com](https://electronics.stackexchange.com/questions/83133/arduino-digitalread-reading-wrong)
 
-### What's left on the project (as of 2020/01/22):
-- [ ] Finish writing and upload the source code (currently v1.76)
-  - [ ] See BUGs for current issues
+- https://github.com/AJMartel/Evc_pt2257
+- http://www.coldtears-electronics.com/images/PT2257-1.jpg
+                |----._.----|
+    10uF+    1 -| Lin   Rin |- 8    +10uF
+    10uF+    2 -| Lout Rout |- 7    +10uF
+    GND      3 -| Gnd    V+ |- 6    .1uF +47uF 5VDC
+    SDA      4 -| SDA   SCL |- 5    SCL
+                |-----------|
+
+- Control LCD backlight
+- https://e-radionica.com/en/blog/hum-digital-potentiometer-10k/
+- MCP4018 I2C 10KOhm 128 steps
+
+
+### What's left on the project (as of 2020/02/24):
+- [ ] Finish writing and upload the source code (currently v1.89)
 - [ ] ReDesign and print circuit board then sent to China for fabrication
   - [ ] Required to use all available functionality of the device (version 1.2)
 - [x] Build the actual device using PCB
-  - [x] Currently working BETA Model PCB version 1.1
+  - [x] Currently working with PCB version 1.1
   - [ ] Build with new PCB version 1.2
 - [ ] Install and calibrate system
   - [ ] See BUGs for current issues
+- [ ] Come up with a cooler name for this than "FPS Bomb Simulator"
 - [ ] Write and publish instructables page
+- [ ] Make a youtube video to demonstrate this project
+
 
 [comment]: # (End Markdown Notes)
