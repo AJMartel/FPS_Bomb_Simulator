@@ -237,13 +237,14 @@ LaserTag Module (http://www.lasertagparts.com/mtformat-2.htm)
 
 - https://github.com/AJMartel/Evc_pt2257
 - http://www.coldtears-electronics.com/images/PT2257-1.jpg
+```text
                 |----._.----|
     10uF+    1 -| Lin   Rin |- 8    +10uF
     10uF+    2 -| Lout Rout |- 7    +10uF
     GND      3 -| Gnd    V+ |- 6    .1uF +47uF 5VDC
     SDA      4 -| SDA   SCL |- 5    SCL
                 |-----------|
-
+```
 - Control LCD backlight
 - https://e-radionica.com/en/blog/hum-digital-potentiometer-10k/
 - MCP4018 I2C 10KOhm 128 steps
