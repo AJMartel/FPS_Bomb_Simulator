@@ -1,8 +1,8 @@
 [comment]: # (Start Markdown Notes)
 # 3DFabXYZ.com FPS Bomb Simulator v1.X
 ## MEGA2560 BASIC Model:
-- Sketch uses 38472 bytes (15%) of program storage space. Maximum is 253952 bytes.
-- Global variables use 1241 bytes (15%) of dynamic memory, leaving 6951 bytes for local variables. Maximum is 8192 bytes.
+- Sketch uses 40128 bytes (15%) of program storage space. Maximum is 253952 bytes.
+- Global variables use 1243 bytes (15%) of dynamic memory, leaving 6949 bytes for local variables. Maximum is 8192 bytes.
 
 ### Language Menu
 Configurable up to 5 Languages
@@ -15,6 +15,8 @@ Configurable up to 5 Languages
   **Note: Only English characters are printed on LCD using 2004 Charater display**
 
 ### PnP upgradable addon modules:
+**All modules are auto-detected when the bomb is powered on**
+**Addon modules afect available options for game play**
 1. **Cutwire Module** (4 wires)
    - Not available in Domination and EscapeRoom modes.
    - Cutwire module will be disabled if any wires are not connected before the bomb is armed.
@@ -42,7 +44,7 @@ Configurable up to 5 Languages
          - Area Conquered
          - Capture the Flag
          - Pandemic (Virus transport)
-7. **sw420 Module** shock/vibration sensor. (Currently implimented code, not recomending release)
+7. **sw420 Module** shock/vibration sensor. (Currently implimented in code but not recomending public release)
 8. **Accelerometer**
    * Future Development
      * possibly the MPU6050 i2c module to replace the sw420 Module
@@ -58,103 +60,107 @@ Configurable up to 5 Languages
   - **Escape Room**
 
 ##    Search and Destroy
-    In this mode the device acts as a bomb.
-    When the "button" mode is used:
-      i   The Red button Arms the bomb.
-      ii  The Green button Disarms the bomb.
-    When the "Passcode" mode is used:
-      i   The time for Passcode entry has a programable time limit.
-      ii  "A" is used to initialize the passcode entry to Arm the bomb.
-      iii "D" is used to initialize the passcode entry to Disarm the bomb.
-      iv  You can set the length of the passcode to a value between 04 and 16 digits
-      v   The "Passcode hint" system is available.
-    Common for both "passcode" and "button" modes:
-      a.  The bomb can be armed and defused only once.
-      b.  The bomb has to be defended by the GREEN team for the duration of the Game Time.
-      c.  The attacking RED team's objective is to arm the bomb and once it is armed, they must prevent the GREEN team from defusing it, until it detonates.
-    There are three ways to finish the game.
+#### In this game mode the device acts as a bomb.
+1. When the "button" mode is used:
+      1.   The Red button Arms the bomb.
+      2.  The Green button Disarms the bomb.
+2. When the "Passcode" mode is used:
+      1.   The time for Passcode entry has a programable time limit.
+      2.  "A" is used to initialize the passcode entry to Arm the bomb.
+      3. "D" is used to initialize the passcode entry to Disarm the bomb.
+      4.  You can set the length of the passcode to a value between 04 and 16 digits
+      5.   The "Passcode hint" system is available.
+3. Common for both "passcode" and "button" modes:
+      1.  The bomb can be armed and defused only once.
+      2.  The bomb has to be defended by the GREEN team for the duration of the Game Time.
+      3.  The attacking RED team's objective is to arm the bomb and once it is armed, they must prevent the GREEN team from defusing it, until it detonates.
+4. There are three ways to finish the game.
       1.  The Game time expires and the RED team was unsuccessful in placing and arming the bomb; the GREEN team wins.
       2.  The RED team was successful in placing and arming the bomb, but unable to prevent the GREEN team from disarming it; The GREEN team wins.
       3.  The RED team was successful in placing and arming the bomb, the GREEN team fails to disarm it and the bomb detonates; The RED team wins.
 
 
 ##    Sabotage
-    In this mode the device acts as a bomb.
-    When the "button" mode is used:
-      i   The Red button Arms the bomb.
-      ii  The Green button Disarms the bomb.
-    When the "Passcode" mode is used:
-      i   "A" is used to initialize the passcode entry to Arm the bomb.
-      ii  "D" is used to initialize the passcode entry to Disarm the bomb.
-      iii You can set the length of the passcode to a value between 04 and 16 digits
-      iv  The "Passcode hint" system is available.
-    Common for both "passcode" and "button" modes:
-      a.  The bomb can be armed and defused as many times as the game time allows.
-      b.  The bomb has to be defended by the GREEN team during Game Time.
-      c.  The attacking RED team's objective is to arm the bomb and once armed must prevent the GREEN team from defusing it, until it detonates.
-    There are two ways to finish the game.
+#### In this game mode the device acts as a bomb.
+1. When the "button" mode is used:
+      1.   The Red button Arms the bomb.
+      2.  The Green button Disarms the bomb.
+2. When the "Passcode" mode is used:
+      1.   "A" is used to initialize the passcode entry to Arm the bomb.
+      2.  "D" is used to initialize the passcode entry to Disarm the bomb.
+      3. You can set the length of the passcode to a value between 04 and 16 digits
+      4.  The "Passcode hint" system is available.
+3. Common for both "passcode" and "button" modes:
+      1.  The bomb can be armed and defused as many times as the game time allows.
+      2.  The bomb has to be defended by the GREEN team during Game Time.
+      3.  The attacking RED team's objective is to arm the bomb and once armed must prevent the GREEN team from defusing it, until it detonates.
+4. There are two ways to finish the game.
       1.  The Game time expires and the RED team was unsuccessful in placing and arming the bomb; the GREEN team wins.
       2.  The RED team was successful in placing and arming the bomb, the GREEN team fails to disarm it and the bomb detonates; The RED team wins.
 
 ##    Armed!
-    In this mode the device acts as a planted bomb.
-    When the "button" mode is used:
-      i   The Green button Disarms bomb.
-    When the "Passcode" mode is used:
-      i   The time for Passcode entry has a programable time limit.
-      ii  "D" is used to initialize the passcode entry to Disarm the bomb.
-      iii You ca set the length of the passcode to a value between 04 and 16 digits
-      iv  The "Passcode hint" system is available.
-    Common for both "passcode" and "button" modes:
-      a.  The bomb starts armed with the countdown to detonation already triggered.
-    There are two ways to finish the game.
+#### In this game mode the device acts as a planted bomb.
+1. When the "button" mode is used:
+      1.   The Green button Disarms bomb.
+2. When the "Passcode" mode is used:
+      1.   The time for Passcode entry has a programable time limit.
+      2.  "D" is used to initialize the passcode entry to Disarm the bomb.
+      3. You ca set the length of the passcode to a value between 04 and 16 digits
+      4.  The "Passcode hint" system is available.
+3. Common for both "passcode" and "button" modes:
+      1.  The bomb starts armed with the countdown to detonation already triggered.
+4. There are two ways to finish the game.
       1.  The bomb time expires and the GREEN team was unsuccessful in disarming the bomb, and the bomb detonates; The RED team wins.
       2.  The GREEN team succeeds in disarming the bomb; The GREEN team wins.
 
 ##    Escape Room:
-    In this mode the device acts as a planted bomb and key safe.
-    Only the "Passcode" mode is available:
-      i   The time for Passcode entry has a programable time limit.
-      ii  "D" is used to initialize the passcode entry to Disarm the bomb.
-      iii You ca set the length of the passcode to a value between 04 and 16 digits
-      iv  "hint" system is unavailable.
-      v   "cutwire" module is unavailable.
-    In this mode:
-      a.  The bomb starts armed with the countdown to detonation already triggered.
-    There are two ways to finish the game.
+#### In this game mode the device acts as a planted bomb and key safe.
+1. Only the "Passcode" mode is available:
+      1.   The time for Passcode entry has a programable time limit.
+      2.  "D" is used to initialize the passcode entry to Disarm the bomb.
+      3. You ca set the length of the passcode to a value between 04 and 16 digits
+      4.  "hint" system is unavailable.
+      5.   "cutwire" module is unavailable.
+2. In this mode:
+      1.  The bomb starts armed with the countdown to detonation already triggered.
+3. There are two ways to finish the game.
       1.  The bomb time expires and the GREEN team was unsuccessful in disarming the bomb, and the bomb detonates; Game Over.
       2.  The GREEN team succeeds in disarming the bomb; The Key Box Opens.
 
 ##    Domination
-    In this mode the device acts as a base.
-    The Red button Captures the zone for the RED Team.
-    The Red button Neutralizes a GREEN zone.
-    The Green button Captures the zone for the GREEN Team.
-    The Green button Neutralizes a RED zone.
-      a.  When the game starts, the base is a Neutral (BLUE) Zone.
-      b.  The objective for both (GREEN and RED) teams is to capture the base.
-      c.  Once the base is captured, the controlling team's time is displayed on screen.
-      d.  While the base is neutral no time is accumulated for either Red or Green teams.
-      e.  Game can be configured to Neutralize the Zone after a set time => forces teams to patrol the zone to keep control.
-      f.  When auto neutralize zone is enabled teams can recapture the zone to reset the auto neutralize time.
-    The only way to win is:
-      1.  The team with the highest total time in control of the base wins.
+#### In this game mode the device acts as a base.
+1. Only the "button" mode is available
+   1. The Red button Captures the zone for the RED Team.
+   2. The Red button Neutralizes a GREEN zone.
+   3. The Green button Captures the zone for the GREEN Team.
+   1. The Green button Neutralizes a RED zone.
+2. This is a time limited game.
+   1.  When the game starts, the base is a Neutral (BLUE) Zone.
+   2.  The objective for both (GREEN and RED) teams is to capture the base.
+   3.  Once the base is captured, the controlling team's time is displayed on screen.
+   4.  While the base is neutral no time is accumulated for either Red or Green teams.
+   5.  Game can be configured to Neutralize the Zone after a set time => forces teams to patrol the zone to keep control.
+   1.  When auto neutralize zone is enabled teams can recapture the zone to reset the auto neutralize time.
+3. The only way to win is:
+   1.  The team with the highest total time in control of the base wins.
 
 ##    Conquered
-    In this mode the device acts as a base.
-    The goal is to be in control of the base with a total Captured time equal to a specified time.
-    The Red button Captures the zone for the RED Team.
-    The Red button Neutralizes a GREEN zone.
-    The Green button Captures the zone for the GREEN Team.
-    The Green button Neutralizes a RED zone.
-      a.  When the game starts, the base is a Neutral (BLUE) Zone.
-      b.  The objective for both (GREEN and RED) teams is to capture the base.
-      c.  Once the base is captured, the controlling team's time is displayed on screen.
-      d.  While the base is neutral no time is decreased for either Red or Green teams.
-      e.  Game can be configured to Neutralize the Zone after a set time => forces teams to patrol the zone to keep control.
-      f.  When auto neutralize zone is enabled teams can recapture the zone to reset the auto neutralize time.
-    The only way to win is:
-      1.  The team that has a total time in control of the base equal to the specified time wins.
+#### In this game mode the device acts as a base.
+1. Only the "button" mode is available.
+    1. The goal is to be in control of the base with a total Captured time equal to a specified time.
+    2. The Red button Captures the zone for the RED Team.
+    3. The Red button Neutralizes a GREEN zone.
+    4. The Green button Captures the zone for the GREEN Team.
+    5. The Green button Neutralizes a RED zone.
+2. This is a time limited game.
+    1.  When the game starts, the base is a Neutral (BLUE) Zone.
+    2.  The objective for both (GREEN and RED) teams is to capture the base.
+    3.  Once the base is captured, the controlling team's time is displayed on screen.
+    4.  While the base is neutral no time is decreased for either Red or Green teams.
+    5.  Game can be configured to Neutralize the Zone after a set time => forces teams to patrol the zone to keep control.
+    6.  When auto neutralize zone is enabled teams can recapture the zone to reset the auto neutralize time.
+3. The only way to win is:
+    1.  The team that has a total time in control of the base equal to the specified time wins.
 
 ####    To test
 - [ ] Quick Game Menus
@@ -229,6 +235,7 @@ LaserTag Module (http://www.lasertagparts.com/mtformat-2.htm)
 ### BUGs
 - [x] Green LED always on juring game play, changed pins fixed issue
 - [ ] Static sound on **tonePin2** pin
+- [ ] Change VibrationSensor Pin
 
 ### Notes
 - [Air Open Soft](http://www.soft-r.fr/index.php?p=accueil)
@@ -238,20 +245,20 @@ LaserTag Module (http://www.lasertagparts.com/mtformat-2.htm)
 - https://github.com/AJMartel/Evc_pt2257
 - http://www.coldtears-electronics.com/images/PT2257-1.jpg
 ```text
-                |----._.----|
-    10uF+    1 -| Lin   Rin |- 8    +10uF
-    10uF+    2 -| Lout Rout |- 7    +10uF
-    GND      3 -| Gnd    V+ |- 6    .1uF +47uF 5VDC
-    SDA      4 -| SDA   SCL |- 5    SCL
-                |-----------|
+                 |----._.----|
+     10uF+    1 -| Lin   Rin |- 8    +10uF
+     10uF+    2 -| Lout Rout |- 7    +10uF
+     GND      3 -| Gnd    V+ |- 6    .1uF +47uF 5VDC
+     SDA      4 -| SDA   SCL |- 5    SCL
+                 |-----------|
 ```
 - Control LCD backlight
 - https://e-radionica.com/en/blog/hum-digital-potentiometer-10k/
 - MCP4018 I2C 10KOhm 128 steps
 
 
-### What's left on the project (as of 2020/02/24):
-- [ ] Finish writing and upload the source code (currently v1.89)
+### What\'s left on the project (as of 2020/02/24):
+- [ ] Finish writing and upload the source code (currently v1.92)
 - [ ] ReDesign and print circuit board then sent to China for fabrication
   - [ ] Required to use all available functionality of the device (version 1.2)
 - [x] Build the actual device using PCB
