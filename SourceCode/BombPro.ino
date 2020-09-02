@@ -1,46 +1,44 @@
-#include <Wire.h> 
-#include <Keypad.h>
-//#include <LiquidCrystal_I2C.h>
-#include <LiquidCrystal.h>
-/*
- Arduino Bomb Pro
- 
- The circuit:
- * More info at : http://yin.mainstreamds.com/
- If you need some help mail me to yinbot@gmail.com
- 
- created 4,Sep, 2010
- Modified 24 May 2014
- by Ignacio Lillo
- 
- */
+#include <I2C4x4Keypad.h>
+#include <LiquidCrystal_I2C.h>
 
-//LiquidCrystal_I2C lcd(0x38,16,2);
-LiquidCrystal lcd(7, 6, 5, 4, 3, 2);
-const byte ROWS = 4; //four rows
-const byte COLS = 4; //three columns
-char keys[ROWS][COLS] = {
-  {
-    '1','2','3','a'                          }
-  ,
-  {
-    '4','5','6','b'                          }
-  ,
-  {
-    '7','8','9','c'                          }
-  ,
-  {
-    '*','0','#','d'                          }
-};
 
-byte rowPins[ROWS] = {
-  A4, A5, 13, 12}; //connect to the row pinouts of the keypad
-byte colPins[COLS] = {
-  A0, A1, A2, A3
-}; //connect to the column pinouts of the keypad
+//20x4 I2C LCD Start
+int i2cAddressLCD = 0x3F;
+int lcdCOLS = 20;
+int lcdROWS = 4;
 
-Keypad keypad = Keypad( makeKeymap(keys), rowPins, colPins, ROWS, COLS );
+LiquidCrystal_I2C lcd(i2cAddressLCD,lcdCOLS,lcdROWS);
+//20x4 I2C LCD End
 
+//4x4 I2C Keypap Start
+int i2cAddressKeypad = 0x38;
+
+Keypad_I2C kpd = Keypad_I2C( makeKeymap(keys), keypadPinRows, keypadPinCols, keypadRows, keypadCols, i2cAddressKeypad );
+//4x4 I2C Keypap End
+
+
+
+const char *menu1[] = { "Search&Destroy","Sabotage","Domination" };
+const char *menu2[] = { "Game Config","Sound Config", "Mosfet Test", "Auto Test" };   
+const char *GAME_TIME = "Game Time:";
+const char *BOMB_TIME = "Bomb Time:";
+const char *ZERO_MINUTES = "00 minutes";
+const char *ARM_TIME = "Arm Time:";
+const char *ZERO_SECS = "00 seconds";
+const char *ENABLE_SOUND = "Enable Sound?";
+const char *YES_OR_NOT = "A : Yes B : No";
+const char *ENABLE_MOSFET = "Enable Mosfet?";
+const char *ENABLE_CODE = "Enable Code Arm?";
+const char *GAME_TIME_TOP = "GAME TIME";
+const char *ARMING_BOMB = "ARMING BOMB";
+const char *ENTER_CODE = "Enter Code";
+const char *CODE_ERROR = "Code Error!";
+const char *BOMB_ARMED = "BOMB ARMED";
+const char *DETONATION_IN = "DETONATION IN";
+const char *DISARMING = "DISARMING BOMB" ;
+const char *DISARM = "DISARMING";
+const char *GAME_OVER = " GAME OVER! ";
+const char *DEFENDERS_WIN = " DEFENDERS WIN ";
 
 char enteredText[8];
 byte time[4];
@@ -52,12 +50,12 @@ char var;
 boolean passwordEnable=false;
 
 //Buttons for lcd shield
-char BT_RIGHT = '4';
-char BT_UP = 'a';
-char BT_DOWN = 'b';
-char BT_LEFT = '6';
-char BT_SEL = 'd';   // Ok key  
-char BT_CANCEL = 'c';
+char BT_RIGHT = '6';
+char BT_UP = '2';
+char BT_DOWN = '8';
+char BT_LEFT = '4';
+char BT_SEL = '*';   // Ok key  
+char BT_CANCEL = '0';
 char BT_DEFUSER = 'x';   // not implemented
 
 //leds
@@ -94,29 +92,6 @@ int tonoAlarma2 = 2600;
 int tonoActivada = 1330;
 int errorTone = 100;
 
-
-char* menu1[]={"Search&Destroy","Sabotage","Domination"      };
-char* menu2[]={"Game Config","Sound Config", "Mosfet Test", "Auto Test"      };   
-char* GAME_TIME="Game Time:";
-char* BOMB_TIME="Bomb Time:";
-char* ZERO_MINUTES="00 minutes";
-char* ARM_TIME="Arm Time:";
-char* ZERO_SECS="00 seconds";
-char* ENABLE_SOUND="Enable Sound?";
-char* YES_OR_NOT="A : Yes B : No";
-char* ENABLE_MOSFET="Enable Mosfet?";
-char* ENABLE_CODE="Enable Code Arm?";
-char* GAME_TIME_TOP="GAME TIME";
-char* ARMING_BOMB = "ARMING BOMB";
-char* ENTER_CODE = "Enter Code";
-char* CODE_ERROR = "Code Error!";
-char* BOMB_ARMED = "BOMB ARMED";
-char* DETONATION_IN = "DETONATION IN";
-char* DISARMING = "DISARMING BOMB" ;
-char* DISARM = "DISARMING";
-char* GAME_OVER = " GAME OVER! ";
-char* DEFENDERS_WIN = " DEFENDERS WIN ";
-
 unsigned long iTime;
 unsigned long timeCalcVar;
 unsigned long redTime;
@@ -125,24 +100,23 @@ unsigned long iZoneTime;//initial time for zone
 byte team=0; // 0 = neutral, 1 = green team, 2 = red team
 
 void setup(){
-  lcd.begin(16, 2);
   Serial.begin(9600);
-  //  lcd.init();                      // initialize the lcd 
-  //  lcd.backlight();
+  lcd.init();                      // initialize the lcd 
+  lcd.backlight();
   lcd.setCursor(3,0);
   tone(tonepin,2400,30);
-  lcd.print("IGNIS ONE");// you can add your team name or someting cool
+  lcd.print("3DFabXYZ");// you can add your team name or someting cool
   lcd.setCursor(0,1);
   lcd.print(" AIRSOFT SYSTEM");// you can add your team name or someting cool
-  keypad.setHoldTime(50);
-  keypad.setDebounceTime(50);
-  keypad.addEventListener(keypadEvent);
+  kpd.setHoldTime(50);
+  kpd.setDebounceTime(50);
+  kpd.addEventListener(keypadEvent);
   delay(2000);
-  pinMode(GREENLED, OUTPUT);     
+//  pinMode(GREENLED, OUTPUT);     
 //  pinMode(8, OUTPUT);  
 //  digitalWrite(8,HIGH);
-  pinMode(REDLED, OUTPUT); 
-  pinMode(mosfet, OUTPUT);  
+//  pinMode(REDLED, OUTPUT); 
+//  pinMode(mosfet, OUTPUT);  
   // CONFIGURE THE BARS OF PROGRESS BAR
   byte bar1[8] = {
     B10000,
@@ -225,6 +199,133 @@ void setup(){
 void loop(){
   menuPrincipal();
 }
+void keypadEvent(KeypadEvent key){
+  switch (kpd.getState()){
+    case PRESSED:
+      switch (key){
+      }
+    break;
+    case RELEASED:
+      switch (key){
+         case 'd': defuseando= false;
+         //Serial.println("d Releases");
+         break;
+         case 'c': cancelando=false;
+         //Serial.println("c Releases");
+         break;
+      }
+    break;
+    case HOLD:
+      switch (key){
+        case 'd': defuseando= true;
+        //Serial.println("d hold");
+        break;
+        case 'c': cancelando=true;
+        //Serial.println("c hold");
+        break;
+      }
+    case IDLE:
+    break;
+  }
+}
+
+void disarmedSplash(){
+  endGame = false;
+  digitalWrite(REDLED, LOW); 
+  digitalWrite(GREENLED, LOW);
+  if(sdStatus || saStatus){
+    lcd.clear();
+    lcd.setCursor(2,0);
+    lcd.print("BOMB DISARMED");
+    lcd.setCursor(3,1);
+    lcd.print("GOODS WIN");
+    digitalWrite(GREENLED, HIGH);  
+    delay(5000);
+    digitalWrite(GREENLED, LOW); 
+  }
+  //end code
+  lcd.clear();
+  lcd.print("Play Again?");
+  lcd.setCursor(0,1);
+  lcd.print("A : Yes B : No");
+  digitalWrite(REDLED, LOW);  
+  digitalWrite(GREENLED, LOW); 
+  while(1)
+  {
+    var = kpd.waitForKey();
+    if(var == 'a' ){
+      tone(tonepin,2400,30);
+      //We have two options, search & destroy and sabotaje play again options so!
+      if(sdStatus){
+        startGameCount();
+        search();
+      }
+      if(saStatus){
+        saStatus=true;
+        startGameCount();
+        start=true; //to set iTime to actual millis() :D
+        sabotage();
+      }
+    }  
+    if(var == 'b' ){
+      tone(tonepin,2400,30);
+      menuPrincipal();
+      break;
+    }  
+  } 
+}
+
+void explodeSplash(){
+  digitalWrite(REDLED, LOW);  
+  digitalWrite(GREENLED, LOW); 
+  cls();
+  delay(100);
+  endGame = false;
+  lcd.setCursor(1,0);
+  lcd.print("TERRORISTS WIN");
+  lcd.setCursor(4,1);
+  lcd.print("GAME OVER");
+  for(int i = 200; i>0; i--)// this is the ultra hi definition explosion sound xD
+  {
+    tone(tonepin,i);
+    delay(20);
+  }
+  noTone(tonepin);
+  if(mosfetEnable){
+    activateMosfet(); 
+  }
+  delay(5000);
+  cls();
+
+  //end code
+  lcd.print("Play Again?");
+  lcd.setCursor(0,1);
+  lcd.print("A : Yes B : No");
+  while(1)
+  {
+    var = kpd.waitForKey();
+    if(var == 'a' ){
+      tone(tonepin,2400,30);
+      //We have two options, search & destroy and sabotaje play again options so!
+      if(sdStatus){
+        startGameCount();
+        search();
+      }
+      if(saStatus){
+        saStatus=true;
+        startGameCount();
+        start=true; //to set iTime to actual millis() :D
+        sabotage();
+      }
+    }  
+    if(var == 'b' ){
+      tone(tonepin,2400,30);
+      menuPrincipal();
+
+      break;
+    }  
+  } 
+}
 
 //##################MENUS###############################
 
@@ -246,7 +347,7 @@ void menuPrincipal(){   //MAIN MENU
   checkArrows(i,2);
   while(1){
 
-    var = keypad.waitForKey();
+    var = kpd.waitForKey();
     if(var == BT_UP && i>0){
       tone(tonepin,2400,30);
       i--;
@@ -294,6 +395,533 @@ void menuPrincipal(){   //MAIN MENU
 
       }
     }
+  }
+}
+
+void config(){
+  //Draw menu
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  int i=0;
+  
+  delay(500);
+  lcd.print(menu2[i]);
+  checkArrows(i,3);
+
+  while(1){
+    var=kpd.waitForKey();
+    if(var == BT_UP && i>0){
+      tone(tonepin,2400,30);
+      i--;
+      lcd.clear();  
+      lcd.print(menu2[i]);
+      checkArrows(i,3);
+      delay(50);
+
+    }
+    if(var == BT_DOWN && i<3){
+      tone(tonepin,2400,30);
+      i++;
+      lcd.clear();  
+      lcd.print(menu2[i]);
+      checkArrows(i,3);
+      delay(50);
+    }
+    if(var == BT_CANCEL){
+      tone(tonepin,2400,30);
+      menuPrincipal();
+    }
+    if(var == BT_SEL){
+      tone(tonepin,2400,30);
+      lcd.clear();
+      switch (i){
+
+      case 0:
+        //gameConfigMenu();
+        break;
+
+      case 1:
+        //soundConfigMenu();
+        break;
+
+      case 2:
+        cls();
+        lcd.print("Mosfet ON!");
+        digitalWrite(mosfet, HIGH);   // turn the LED on (HIGH is the voltage level)
+        delay(4000);   // wait for 4 second
+        cls();
+        lcd.print("Mosfet OFF!");
+        digitalWrite(mosfet, LOW);
+        delay(2000);
+        config();
+        break;        
+
+      }
+    }
+  }
+}
+
+void configQuickGame(){
+
+  cls();
+  //GAME TIME
+  if(sdStatus || doStatus || saStatus){
+    menu1:
+    cls();
+    lcd.print(GAME_TIME);
+    delay(100);
+    lcd.setCursor(0,1);
+    lcd.print("00:00 hh:mm");
+    lcd.cursor();
+    lcd.blink();
+    lcd.setCursor(0,1);
+    byte var2=0;
+    for(int i=0;i<4;i++){ 
+      while(1){
+        if(i==2 && var2==0){
+          lcd.print(":");
+          var2=1;
+        }
+
+        byte varu= getRealNumber();
+        if(varu !=11){
+
+          time[i] =  varu;
+          Serial.print(varu);
+
+
+          lcd.print(varu);
+          tone(tonepin,2400,30);
+
+          break;
+        }
+      }  
+    }
+    lcd.noCursor();
+    lcd.noBlink();
+    lcd.setCursor(13,1);
+    lcd.print("ok?");
+    //zona donde pasamos los items a
+    //redibujar
+    while(1){
+      var = kpd.waitForKey();
+      if(var == 'd') // Cancel or Back Button :')
+      {
+        tone(tonepin,2400,30);
+        GAMEMINUTES= ((time[0]*600)+(time[1]*60)+(time[2]*10)+(time[3]));
+        break;
+      }    
+  if(var == 'c') // Cancel or Back Button :')
+      {
+        tone(tonepin,2400,30);
+        goto menu1;
+      }           
+    }
+    tone(tonepin,2400,30);
+    cls();
+  }
+  //BOMB TIME
+  if(sdStatus || saStatus){
+ 
+    menu2:
+    cls();
+    lcd.print(BOMB_TIME);
+    delay(100);
+    lcd.setCursor(0,1);
+    lcd.print(ZERO_MINUTES);
+    lcd.cursor();
+    lcd.blink();
+    lcd.setCursor(0,1);
+    for(int i=0;i<2;i++){ 
+      while(1){
+        byte varu= getRealNumber();
+        if(varu !=11){
+          time[i] =  varu;
+          lcd.print(varu);
+          tone(tonepin,2400,30);
+          break;
+        }
+      }  
+    }
+    lcd.noCursor();
+    lcd.noBlink();   
+    lcd.setCursor(13,1);
+    lcd.print("ok?");
+    //zona donde pasamos los items a
+    //redibujar
+    while(1){
+      var = kpd.waitForKey();
+      if(var == 'd') // Cancel or Back Button :')
+      {
+        tone(tonepin,2400,30);
+        BOMBMINUTES= ((time[0]*10)+(time[1]));
+        break;
+      }    
+  if(var == 'c') // Cancel or Back Button :')
+      {
+        tone(tonepin,2400,30);
+        goto menu2;
+      }           
+    }
+    tone(tonepin,2400,30);
+    cls();
+  }
+  cls();
+  //ARMING TIME
+  if(sdStatus || doStatus || saStatus){
+        
+    menu3:
+    cls();
+    lcd.print(ARM_TIME);
+    delay(100);
+    lcd.setCursor(0,1);
+    lcd.print(ZERO_SECS);
+    lcd.cursor();
+    lcd.blink();
+    lcd.setCursor(0,1);
+    for(int i=0;i<2;i++){ 
+      while(1){
+        byte varu= getRealNumber();
+        if(varu !=11){
+          time[i] =  varu;
+          lcd.print(varu);
+          tone(tonepin,2400,30);
+          break;
+        }
+      }  
+    }
+    lcd.noCursor();
+    lcd.noBlink(); 
+    lcd.setCursor(13,1);
+    lcd.print("ok?");  
+    
+    //zona donde pasamos los items a
+    //redibujar
+    while(1){
+      var = kpd.waitForKey();
+      if(var == 'd') // Cancel or Back Button :')
+      {
+        tone(tonepin,2400,30);
+        ACTIVATESECONDS= ((time[0]*10)+(time[1]));
+        break;
+      }    
+  if(var == 'c') // Cancel or Back Button :')
+      {
+        tone(tonepin,2400,30);
+        goto menu3;
+      }           
+    }
+    tone(tonepin,2400,30);
+    cls();
+  }
+  //Want sound??
+  if(sdStatus || saStatus || doStatus){
+    cls();
+    lcd.print(ENABLE_SOUND);
+    lcd.setCursor(0,1);
+    lcd.print(YES_OR_NOT);
+
+    while(1)
+    {
+      var = kpd.waitForKey();
+      if(var == 'a' ){
+        soundEnable=true;
+        tone(tonepin,2400,30);
+        break;
+      }  
+
+      if(var == 'b' ){
+        soundEnable=false;
+        tone(tonepin,2400,30);
+        break;
+      }  
+    }
+  } 
+  //Activate Mosfet at Terrorist game ends??? Boom!
+
+  if(sdStatus || saStatus){
+    cls();
+    lcd.print(ENABLE_MOSFET);
+    lcd.setCursor(0,1);
+    lcd.print(YES_OR_NOT);
+    while(1)
+    {
+      var = kpd.waitForKey();
+      if(var == 'a' ){
+        mosfetEnable=true;
+        tone(tonepin,2400,30);
+        break;
+      }  
+      if(var == 'b' ){
+        mosfetEnable=false;
+        tone(tonepin,2400,30);
+        break;
+      }  
+    } 
+  }
+  //You Want a password enable-disable game?
+  if(sdStatus || saStatus){
+    cls();
+    lcd.print(ENABLE_CODE);
+    lcd.setCursor(0,1);
+    lcd.print(YES_OR_NOT);
+
+    while(1)
+    {
+      var = kpd.waitForKey();
+      if(var == 'a' ){
+        tone(tonepin,2400,30);
+        setNewPass();
+        passwordEnable = true;
+        break;
+      }  
+      if(var == 'b' ){
+        tone(tonepin,2400,30);
+        passwordEnable = false;
+        break;
+      }  
+    } 
+    tone(tonepin,2400,30);
+  }  
+  //Continue the game :D
+}
+
+//Used to get keys, here you can configure how works the input without modify the other code
+boolean isPressed(char key) 
+{
+
+//  Serial.print("checkeando= ");
+//  Serial.print(key);
+
+//  Serial.print(" estado = ");
+//  Serial.print(kpd.getState());
+
+//  Serial.print(" estado = ");
+//  Serial.print(kpd.getKey());
+
+  if(kpd.getKey() == key)
+  {
+//    Serial.println(" TRUE");
+    return true;
+  }
+  else if(kpd.getKey() == key && kpd.getState() == 2)
+  {
+//    Serial.print(" Hold!!");
+//    Serial.println(key);
+    return true;
+  }
+//  Serial.println(" Falso");
+  return false;
+}
+
+//This fuction compare enteredText[8] and password[8] variables
+boolean comparePassword(){
+
+  for(int i=0;i<8;i++){
+    if(enteredText[i]!=password[i])return false;
+  }
+  return true;
+
+}
+
+//Set the password variable
+void setCode(){
+
+  lcd.setCursor(0, 1);
+  for(int i=0;i<8;i++){
+    while(1){
+      var= getNumber();
+      if(var !='x'){
+        enteredText[i] = var;
+
+        if (i != 0){
+          lcd.setCursor(i-1,1);
+          lcd.print("*");
+          lcd.print(var);
+        }
+        else
+        {
+          lcd.print(var);
+        }
+        tone(tonepin,2400,30);
+        break;
+      }
+    }
+  }
+}
+void setCodeTime(){
+
+  timeCalcVar=millis();
+
+  for(int i=0;i<8;i++){
+    while(1){
+      if(5000+timeCalcVar-millis()<=100){
+        enteredText[i]='x';
+        break;
+      }
+
+      lcd.setCursor(11,0);
+      printTimeDom(5000+timeCalcVar-millis(),false);
+
+      var= getNumber();
+      if(var !='x'){
+        enteredText[i] = var;
+
+        if (i != 0){
+          lcd.setCursor(i-1,1);
+          lcd.print("*");
+          lcd.print(var);
+        }
+        else
+        {
+          lcd.print(var);
+        }
+        tone(tonepin,2400,30);
+        break;
+      }
+    }
+  }
+}
+void setPass(){
+  lcd.setCursor(0, 1);
+
+  for(int i=0;i<8;i++){ 
+    while(1){
+      var= getNumber();
+      if(var !='x'){
+        password[i] =  var;
+        if (i != 0){
+          lcd.setCursor(i-1,1);
+          lcd.print("*");
+          lcd.print(var);
+        }
+        else
+        {
+          lcd.print(var);
+        }
+        tone(tonepin,2400,30);
+        break;
+      }
+    }  
+  }
+}
+
+void setNewPass(){
+
+  while(1){
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("Enter New Pass");
+    setPass();
+
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("Retype Pass");
+
+    setCode();
+
+    if(comparePassword()){
+
+      lcd.clear();
+      lcd.setCursor(0, 0);
+      lcd.print("Password Set OK!");
+      delay(2000); 
+      break; 
+    }
+    else {
+      lcd.clear();
+      lcd.setCursor(0, 0);
+      lcd.print("ERROR Dont Match!");
+      if(soundEnable)tone(tonepin,errorTone,200);
+      delay(2000); 
+
+    }
+  }
+}
+//Whait until a button is pressed is is a number return the number 'char' if not return x
+
+
+
+char getNumber(){
+
+  while(1){
+    var = kpd.getKey();
+
+    if (var){//
+      switch (var) {
+      case 'a': 
+        return 'x';
+        break;
+      case 'b': 
+        return 'x';
+        break;
+
+      case 'c': 
+        return 'x';
+        break;
+      case 'd': 
+        return 'x';
+        break;
+      case '*': 
+        return 'x';
+        break;
+      case '#': 
+        return 'x';
+        break;
+      default:
+        return var;
+        break;
+      }
+    }
+    return 'x';
+  }
+}
+
+byte getRealNumber(){
+
+  while(1){
+    var = kpd.waitForKey();
+
+    if (var){//
+      switch (var) {
+      case '1': 
+        return 1;
+        break;
+      case '2': 
+        return 2;
+        break;
+
+      case '3': 
+        return 3;
+        break;
+      case '4': 
+        return 4;
+        break;
+      case '5': 
+        return 5;
+        break;
+      case '6': 
+        return 6;
+      case '7': 
+        return 7;
+        break;
+      case '8': 
+        return 8;
+        break;
+      case '9': 
+        return 9;
+        break;
+        case '0': 
+        return 0;
+        break;
+        
+      default:
+        return 11;
+        break;
+      }
+
+    }
+    return 11;
   }
 }
 
@@ -446,7 +1074,7 @@ void startGameCount(){
   lcd.print("Ready to Begin");
   lcd.setCursor(0,1);
   lcd.print("Push ANY Button");
-  keypad.waitForKey();//if you press a button game start
+  kpd.waitForKey();//if you press a button game start
 
   cls();
   lcd.setCursor(1,0);
@@ -489,660 +1117,6 @@ void activateMosfet(){
 
 }
 
-void config(){
-  //Draw menu
-  lcd.clear();
-  lcd.setCursor(0, 0);
-  int i=0;
-  
-  delay(500);
-  lcd.print(menu2[i]);
-  checkArrows(i,3);
-
-  while(1){
-    var=keypad.waitForKey();
-    if(var == BT_UP && i>0){
-      tone(tonepin,2400,30);
-      i--;
-      lcd.clear();  
-      lcd.print(menu2[i]);
-      checkArrows(i,3);
-      delay(50);
-
-    }
-    if(var == BT_DOWN && i<3){
-      tone(tonepin,2400,30);
-      i++;
-      lcd.clear();  
-      lcd.print(menu2[i]);
-      checkArrows(i,3);
-      delay(50);
-    }
-    if(var == BT_CANCEL){
-      tone(tonepin,2400,30);
-      menuPrincipal();
-    }
-    if(var == BT_SEL){
-      tone(tonepin,2400,30);
-      lcd.clear();
-      switch (i){
-
-      case 0:
-        //gameConfigMenu();
-        break;
-
-      case 1:
-        //soundConfigMenu();
-        break;
-
-      case 2:
-        cls();
-        lcd.print("Mosfet ON!");
-        digitalWrite(mosfet, HIGH);   // turn the LED on (HIGH is the voltage level)
-        delay(4000);   // wait for 4 second
-        cls();
-        lcd.print("Mosfet OFF!");
-        digitalWrite(mosfet, LOW);
-        delay(2000);
-        config();
-        break;        
-
-      }
-    }
-  }
-}
-
-void configQuickGame(){
-
-  cls();
-  //GAME TIME
-  if(sdStatus || doStatus || saStatus){
-    menu1:
-    cls();
-    lcd.print(GAME_TIME);
-    delay(100);
-    lcd.setCursor(0,1);
-    lcd.print("00:00 hh:mm");
-    lcd.cursor();
-    lcd.blink();
-    lcd.setCursor(0,1);
-    byte var2=0;
-    for(int i=0;i<4;i++){ 
-      while(1){
-        if(i==2 && var2==0){
-          lcd.print(":");
-          var2=1;
-        }
-
-        byte varu= getRealNumber();
-        if(varu !=11){
-
-          time[i] =  varu;
-          Serial.print(varu);
-
-
-          lcd.print(varu);
-          tone(tonepin,2400,30);
-
-          break;
-        }
-      }  
-    }
-    lcd.noCursor();
-    lcd.noBlink();
-    lcd.setCursor(13,1);
-    lcd.print("ok?");
-    //zona donde pasamos los items a
-    //redibujar
-    while(1){
-      var = keypad.waitForKey();
-      if(var == 'd') // Cancel or Back Button :')
-      {
-        tone(tonepin,2400,30);
-        GAMEMINUTES= ((time[0]*600)+(time[1]*60)+(time[2]*10)+(time[3]));
-        break;
-      }    
-  if(var == 'c') // Cancel or Back Button :')
-      {
-        tone(tonepin,2400,30);
-        goto menu1;
-      }           
-    }
-    tone(tonepin,2400,30);
-    cls();
-  }
-  //BOMB TIME
-  if(sdStatus || saStatus){
- 
-    menu2:
-    cls();
-    lcd.print(BOMB_TIME);
-    delay(100);
-    lcd.setCursor(0,1);
-    lcd.print(ZERO_MINUTES);
-    lcd.cursor();
-    lcd.blink();
-    lcd.setCursor(0,1);
-    for(int i=0;i<2;i++){ 
-      while(1){
-        byte varu= getRealNumber();
-        if(varu !=11){
-          time[i] =  varu;
-          lcd.print(varu);
-          tone(tonepin,2400,30);
-          break;
-        }
-      }  
-    }
-    lcd.noCursor();
-    lcd.noBlink();   
-    lcd.setCursor(13,1);
-    lcd.print("ok?");
-    //zona donde pasamos los items a
-    //redibujar
-    while(1){
-      var = keypad.waitForKey();
-      if(var == 'd') // Cancel or Back Button :')
-      {
-        tone(tonepin,2400,30);
-        BOMBMINUTES= ((time[0]*10)+(time[1]));
-        break;
-      }    
-  if(var == 'c') // Cancel or Back Button :')
-      {
-        tone(tonepin,2400,30);
-        goto menu2;
-      }           
-    }
-    tone(tonepin,2400,30);
-    cls();
-  }
-  cls();
-  //ARMING TIME
-  if(sdStatus || doStatus || saStatus){
-        
-    menu3:
-    cls();
-    lcd.print(ARM_TIME);
-    delay(100);
-    lcd.setCursor(0,1);
-    lcd.print(ZERO_SECS);
-    lcd.cursor();
-    lcd.blink();
-    lcd.setCursor(0,1);
-    for(int i=0;i<2;i++){ 
-      while(1){
-        byte varu= getRealNumber();
-        if(varu !=11){
-          time[i] =  varu;
-          lcd.print(varu);
-          tone(tonepin,2400,30);
-          break;
-        }
-      }  
-    }
-    lcd.noCursor();
-    lcd.noBlink(); 
-    lcd.setCursor(13,1);
-    lcd.print("ok?");  
-    
-    //zona donde pasamos los items a
-    //redibujar
-    while(1){
-      var = keypad.waitForKey();
-      if(var == 'd') // Cancel or Back Button :')
-      {
-        tone(tonepin,2400,30);
-        ACTIVATESECONDS= ((time[0]*10)+(time[1]));
-        break;
-      }    
-  if(var == 'c') // Cancel or Back Button :')
-      {
-        tone(tonepin,2400,30);
-        goto menu3;
-      }           
-    }
-    tone(tonepin,2400,30);
-    cls();
-  }
-  //Want sound??
-  if(sdStatus || saStatus || doStatus){
-    cls();
-    lcd.print(ENABLE_SOUND);
-    lcd.setCursor(0,1);
-    lcd.print(YES_OR_NOT);
-
-    while(1)
-    {
-      var = keypad.waitForKey();
-      if(var == 'a' ){
-        soundEnable=true;
-        tone(tonepin,2400,30);
-        break;
-      }  
-
-      if(var == 'b' ){
-        soundEnable=false;
-        tone(tonepin,2400,30);
-        break;
-      }  
-    }
-  } 
-  //Activate Mosfet at Terrorist game ends??? Boom!
-
-  if(sdStatus || saStatus){
-    cls();
-    lcd.print(ENABLE_MOSFET);
-    lcd.setCursor(0,1);
-    lcd.print(YES_OR_NOT);
-    while(1)
-    {
-      var = keypad.waitForKey();
-      if(var == 'a' ){
-        mosfetEnable=true;
-        tone(tonepin,2400,30);
-        break;
-      }  
-      if(var == 'b' ){
-        mosfetEnable=false;
-        tone(tonepin,2400,30);
-        break;
-      }  
-    } 
-  }
-  //You Want a password enable-disable game?
-  if(sdStatus || saStatus){
-    cls();
-    lcd.print(ENABLE_CODE);
-    lcd.setCursor(0,1);
-    lcd.print(YES_OR_NOT);
-
-    while(1)
-    {
-      var = keypad.waitForKey();
-      if(var == 'a' ){
-        tone(tonepin,2400,30);
-        setNewPass();
-        passwordEnable = true;
-        break;
-      }  
-      if(var == 'b' ){
-        tone(tonepin,2400,30);
-        passwordEnable = false;
-        break;
-      }  
-    } 
-    tone(tonepin,2400,30);
-  }  
-  //Continue the game :D
-}
-
-void keypadEvent(KeypadEvent key){
-  switch (keypad.getState()){
-    case PRESSED:
-      switch (key){
-
-      }
-    break;
-    case RELEASED:
-      switch (key){
-         case 'd': defuseando= false;
-         //Serial.println("d Releases");
-         break;
-         case 'c': cancelando=false;
-         //Serial.println("c Releases");
-         break;
-      }
-    break;
-    case HOLD:
-      switch (key){
-        case 'd': defuseando= true;
-        //Serial.println("d hold");
-        break;
-        case 'c': cancelando=true;
-        //Serial.println("c hold");
-        break;
-      }
-    break;
-  }
-}
-
-void disarmedSplash(){
-  endGame = false;
-  digitalWrite(REDLED, LOW); 
-  digitalWrite(GREENLED, LOW);
-  if(sdStatus || saStatus){
-    lcd.clear();
-    lcd.setCursor(2,0);
-    lcd.print("BOMB DISARMED");
-    lcd.setCursor(3,1);
-    lcd.print("GOODS WIN");
-    digitalWrite(GREENLED, HIGH);  
-    delay(5000);
-    digitalWrite(GREENLED, LOW); 
-  }
-  //end code
-  lcd.clear();
-  lcd.print("Play Again?");
-  lcd.setCursor(0,1);
-  lcd.print("A : Yes B : No");
-  digitalWrite(REDLED, LOW);  
-  digitalWrite(GREENLED, LOW); 
-  while(1)
-  {
-    var = keypad.waitForKey();
-    if(var == 'a' ){
-      tone(tonepin,2400,30);
-      //We have two options, search & destroy and sabotaje play again options so!
-      if(sdStatus){
-        startGameCount();
-        search();
-      }
-      if(saStatus){
-        saStatus=true;
-        startGameCount();
-        start=true; //to set iTime to actual millis() :D
-        sabotage();
-      }
-    }  
-    if(var == 'b' ){
-      tone(tonepin,2400,30);
-      menuPrincipal();
-      break;
-    }  
-  } 
-}
-
-void explodeSplash(){
-  digitalWrite(REDLED, LOW);  
-  digitalWrite(GREENLED, LOW); 
-  cls();
-  delay(100);
-  endGame = false;
-  lcd.setCursor(1,0);
-  lcd.print("TERRORISTS WIN");
-  lcd.setCursor(4,1);
-  lcd.print("GAME OVER");
-  for(int i = 200; i>0; i--)// this is the ultra hi definition explosion sound xD
-  {
-    tone(tonepin,i);
-    delay(20);
-  }
-  noTone(tonepin);
-  if(mosfetEnable){
-    activateMosfet(); 
-  }
-  delay(5000);
-  cls();
-
-  //end code
-  lcd.print("Play Again?");
-  lcd.setCursor(0,1);
-  lcd.print("A : Yes B : No");
-  while(1)
-  {
-    var = keypad.waitForKey();
-    if(var == 'a' ){
-      tone(tonepin,2400,30);
-      //We have two options, search & destroy and sabotaje play again options so!
-      if(sdStatus){
-        startGameCount();
-        search();
-      }
-      if(saStatus){
-        saStatus=true;
-        startGameCount();
-        start=true; //to set iTime to actual millis() :D
-        sabotage();
-      }
-    }  
-    if(var == 'b' ){
-      tone(tonepin,2400,30);
-      menuPrincipal();
-
-      break;
-    }  
-  } 
-}
-
-//Used to get keys, here you can configure how works the input without modify the other code
-boolean isPressed(char key) 
-{
-
-//  Serial.print("checkeando= ");
-//  Serial.print(key);
-
-//  Serial.print(" estado = ");
-//  Serial.print(keypad.getState());
-
-//  Serial.print(" estado = ");
-//  Serial.print(keypad.getKey());
-
-  if(keypad.getKey() == key)
-  {
-//    Serial.println(" TRUE");
-    return true;
-  }
-  else if(keypad.getKey() == key && keypad.getState() == 2)
-  {
-//    Serial.print(" Hold!!");
-//    Serial.println(key);
-    return true;
-  }
-//  Serial.println(" Falso");
-  return false;
-}
-
-//This fuction compare enteredText[8] and password[8] variables
-boolean comparePassword(){
-
-  for(int i=0;i<8;i++){
-    if(enteredText[i]!=password[i])return false;
-  }
-  return true;
-
-}
-
-//Set the password variable
-void setCode(){
-
-  lcd.setCursor(0, 1);
-  for(int i=0;i<8;i++){
-    while(1){
-      var= getNumber();
-      if(var !='x'){
-        enteredText[i] = var;
-
-        if (i != 0){
-          lcd.setCursor(i-1,1);
-          lcd.print("*");
-          lcd.print(var);
-        }
-        else
-        {
-          lcd.print(var);
-        }
-        tone(tonepin,2400,30);
-        break;
-      }
-    }
-  }
-}
-void setCodeTime(){
-
-  timeCalcVar=millis();
-
-  for(int i=0;i<8;i++){
-    while(1){
-      if(5000+timeCalcVar-millis()<=100){
-        enteredText[i]='x';
-        break;
-      }
-
-      lcd.setCursor(11,0);
-      printTimeDom(5000+timeCalcVar-millis(),false);
-
-      var= getNumber();
-      if(var !='x'){
-        enteredText[i] = var;
-
-        if (i != 0){
-          lcd.setCursor(i-1,1);
-          lcd.print("*");
-          lcd.print(var);
-        }
-        else
-        {
-          lcd.print(var);
-        }
-        tone(tonepin,2400,30);
-        break;
-      }
-    }
-  }
-}
-void setPass(){
-  lcd.setCursor(0, 1);
-
-  for(int i=0;i<8;i++){ 
-    while(1){
-      var= getNumber();
-      if(var !='x'){
-        password[i] =  var;
-        if (i != 0){
-          lcd.setCursor(i-1,1);
-          lcd.print("*");
-          lcd.print(var);
-        }
-        else
-        {
-          lcd.print(var);
-        }
-        tone(tonepin,2400,30);
-        break;
-      }
-    }  
-  }
-}
-
-void setNewPass(){
-
-  while(1){
-    lcd.clear();
-    lcd.setCursor(0, 0);
-    lcd.print("Enter New Pass");
-    setPass();
-
-    lcd.clear();
-    lcd.setCursor(0, 0);
-    lcd.print("Retype Pass");
-
-    setCode();
-
-    if(comparePassword()){
-
-      lcd.clear();
-      lcd.setCursor(0, 0);
-      lcd.print("Password Set OK!");
-      delay(2000); 
-      break; 
-    }
-    else {
-      lcd.clear();
-      lcd.setCursor(0, 0);
-      lcd.print("ERROR Dont Match!");
-      if(soundEnable)tone(tonepin,errorTone,200);
-      delay(2000); 
-
-    }
-  }
-}
-//Whait until a button is pressed is is a number return the number 'char' if not return x
-
-
-
-char getNumber(){
-
-  while(1){
-    var = keypad.getKey();
-
-    if (var){//
-      switch (var) {
-      case 'a': 
-        return 'x';
-        break;
-      case 'b': 
-        return 'x';
-        break;
-
-      case 'c': 
-        return 'x';
-        break;
-      case 'd': 
-        return 'x';
-        break;
-      case '*': 
-        return 'x';
-        break;
-      case '#': 
-        return 'x';
-        break;
-      default:
-        return var;
-        break;
-      }
-    }
-    return 'x';
-  }
-}
-
-byte getRealNumber(){
-
-  while(1){
-    var = keypad.waitForKey();
-
-    if (var){//
-      switch (var) {
-      case '1': 
-        return 1;
-        break;
-      case '2': 
-        return 2;
-        break;
-
-      case '3': 
-        return 3;
-        break;
-      case '4': 
-        return 4;
-        break;
-      case '5': 
-        return 5;
-        break;
-      case '6': 
-        return 6;
-      case '7': 
-        return 7;
-        break;
-      case '8': 
-        return 8;
-        break;
-      case '9': 
-        return 9;
-        break;
-        case '0': 
-        return 0;
-        break;
-        
-      default:
-        return 11;
-        break;
-      }
-
-    }
-    return 11;
-  }
-}
 
 void search(){
   cls();
@@ -1164,7 +1138,7 @@ void search(){
 
     //Code for led blinking
     timeCalcVar=(millis()- iTime)%1000;
-    if(timeCalcVar >= 0 && timeCalcVar <= 50)
+    if(timeCalcVar <= 50)
     {
       digitalWrite(GREENLED, HIGH);  
     }
@@ -1189,9 +1163,9 @@ void search(){
     {
       endSplash();
     }
-    //Serial.println(keypad.getKey());
+    //Serial.println(kpd.getKey());
     //USED IN PASSWORD GAME 
-    if('d' == keypad.getKey() && passwordEnable){
+    if('d' == kpd.getKey() && passwordEnable){
       lcd.clear();
       lcd.setCursor(2, 0);
       lcd.print(ARMING_BOMB);
@@ -1226,10 +1200,10 @@ void search(){
       unsigned long xTime=millis(); //start disabling time
       while(defuseando)
       {
-        keypad.getKey();
+        kpd.getKey();
         timeCalcVar = (millis()- xTime)%1000;
 
-        if( timeCalcVar >= 0 && timeCalcVar <= 40)
+        if( timeCalcVar <= 40)
         {
           digitalWrite(REDLED, HIGH);  
           if(soundEnable)tone(tonepin,tonoAlarma1,200);
@@ -1278,7 +1252,7 @@ void destroy(){
     //Led Blink
 
     timeCalcVar=(millis()- iTime)%1000;
-    if(timeCalcVar >= 0 && timeCalcVar <= 40)
+    if(timeCalcVar <= 40)
     {
       digitalWrite(REDLED, HIGH);  
       if(soundEnable)tone(tonepin,tonoActivada,largoTono);
@@ -1315,7 +1289,7 @@ void destroy(){
 
     //IF IS A PASSWORD GAME 
 
-    if('d' == keypad.getKey() && passwordEnable){
+    if('d' == kpd.getKey() && passwordEnable){
 
       lcd.clear();
       lcd.setCursor(1,0);
@@ -1352,14 +1326,14 @@ void destroy(){
       unsigned long xTime=millis();
       while(defuseando)
       {
-        keypad.getKey();
+        kpd.getKey();
         //check if game time runs out during the disabling
         aTime= millis()- iTime;
         if((minutos-aTime/60000==0 && 59-((aTime/1000)%60)==0) || minutos-aTime/60000>4000000000){ 
           endGame = true;
         }
         timeCalcVar=(millis()- xTime)%1000;
-        if(timeCalcVar>= 0 && timeCalcVar <= 20)
+        if(timeCalcVar <= 20)
         {
           digitalWrite(GREENLED, HIGH);  
           if(soundEnable)tone(tonepin,tonoAlarma1,200);
@@ -1426,7 +1400,7 @@ void sabotage(){
 
     //Code for led blinking
     timeCalcVar=(millis()- iTime)%1000;
-    if(timeCalcVar >= 0 && timeCalcVar <= 50)
+    if(timeCalcVar <= 50)
     {
       digitalWrite(GREENLED, HIGH);  
     }
@@ -1466,7 +1440,7 @@ void sabotage(){
       }
     }
     //USED IN PASSWORD GAME 
-    if('d' == keypad.getKey() && passwordEnable){
+    if('d' == kpd.getKey() && passwordEnable){
       lcd.clear();
       lcd.setCursor(2,0);      
       lcd.print(ARMING_BOMB);
@@ -1493,7 +1467,7 @@ void sabotage(){
     //Check If Is Activating
     while(defuseando && !passwordEnable)
     {
-      keypad.getKey();
+      kpd.getKey();
       cls();
       digitalWrite(GREENLED, LOW);
       lcd.clear();
@@ -1504,10 +1478,10 @@ void sabotage(){
       unsigned long xTime=millis(); //start disabling time
       while(defuseando)
       {
-        keypad.getKey();
+        kpd.getKey();
         timeCalcVar = (millis()- xTime)%1000;
 
-        if( timeCalcVar >= 0 && timeCalcVar <= 40)
+        if( timeCalcVar <= 40)
         {
           digitalWrite(REDLED, HIGH);  
           if(soundEnable)tone(tonepin,tonoAlarma1,200);
@@ -1554,7 +1528,7 @@ void destroySabotage(){
     //Led Blink
 
     timeCalcVar=(millis()- iTime)%1000;
-    if(timeCalcVar >= 0 && timeCalcVar <= 40)
+    if(timeCalcVar <= 40)
     {
       digitalWrite(REDLED, HIGH);  
       if(soundEnable)tone(tonepin,tonoActivada,largoTono);
@@ -1591,7 +1565,7 @@ void destroySabotage(){
 
     //IF IS A PASSWORD GAME 
 
-    if('d' == keypad.getKey() && passwordEnable){
+    if('d' == kpd.getKey() && passwordEnable){
 
       cls();
       digitalWrite(REDLED, LOW);  
@@ -1629,14 +1603,14 @@ void destroySabotage(){
       unsigned long xTime=millis();
       while(defuseando)
       {
-        keypad.getKey();
+        kpd.getKey();
         //check if game time runs out during the disabling
         aTime= millis()- iTime;
         if((minutos-aTime/60000==0 && 59-((aTime/1000)%60)==0) || minutos-aTime/60000>4000000000){ 
           endGame = true;
         }
         timeCalcVar=(millis()- xTime)%1000;
-        if(timeCalcVar>= 0 && timeCalcVar <= 20)
+        if(timeCalcVar <= 20)
         {
           digitalWrite(GREENLED, HIGH);  
           if(soundEnable)tone(tonepin,tonoAlarma1,200);
@@ -1663,7 +1637,7 @@ void destroySabotage(){
   }
 }
   
-void domination(){
+ void domination(){
 
   //SETUP INITIAL TIME 
   int minutos = GAMEMINUTES-1;
@@ -1688,11 +1662,11 @@ void domination(){
       gameOver();
     }
     
-    keypad.getKey();
+    kpd.getKey();
     aTime=millis()- iTime;
     //Code for led blinking
     timeCalcVar=(millis()- iTime)%1000;
-    if(timeCalcVar >= 0 && timeCalcVar <= 40)
+    if(timeCalcVar <= 40)
     {
       if(team==1)digitalWrite(GREENLED, HIGH);  
       if(team==2)digitalWrite(REDLED, HIGH);  
@@ -1703,7 +1677,7 @@ void domination(){
       if(team==2)digitalWrite(REDLED, LOW);
     }
     // Sound!!! same as Destroy 
-    if(timeCalcVar >= 0 && timeCalcVar <= 40 && soundEnable)tone(tonepin,tonoActivada,largoTono);
+    if(timeCalcVar <= 40 && soundEnable)tone(tonepin,tonoActivada,largoTono);
 
     if(timeCalcVar >= 245 && timeCalcVar <= 255 && minutos-aTime/60000<2 && soundEnable)tone(tonepin,tonoActivada,largoTono);
     if(timeCalcVar >= 495 && timeCalcVar <= 510 && minutos-aTime/60000<4 && soundEnable)tone(tonepin,tonoActivada,largoTono);
@@ -1759,10 +1733,10 @@ void domination(){
           endGame = true;
         }
         
-        keypad.getKey();
+        kpd.getKey();
         timeCalcVar = (millis()- xTime)%1000;
 
-        if( timeCalcVar >= 0 && timeCalcVar <= 20)
+        if( timeCalcVar <= 20)
         {
           if(soundEnable)tone(tonepin,tonoAlarma1,200);
         }
@@ -1807,7 +1781,7 @@ void domination(){
       unsigned long xTime=millis(); //start disabling time
       while(defuseando)
       {
-        keypad.getKey();
+        kpd.getKey();
         //check if game time runs out during the disabling
         aTime= millis()- iTime;
         if((minutos-aTime/60000==0 && 59-((aTime/1000)%60)==0) || minutos-aTime/60000>4000000000){ 
@@ -1815,7 +1789,7 @@ void domination(){
         }
         timeCalcVar = (millis()- xTime)%1000;
 
-        if( timeCalcVar >= 0 && timeCalcVar <= 20)
+        if( timeCalcVar <= 20)
         {
           digitalWrite(REDLED, HIGH);  
           if(soundEnable)tone(tonepin,tonoAlarma1,200);
@@ -1853,7 +1827,7 @@ void domination(){
       unsigned long xTime=millis(); //start disabling time
       while(cancelando)
       {
-        keypad.getKey();
+        kpd.getKey();
         //check if game time runs out during the disabling
         aTime= millis()- iTime;
         if((minutos-aTime/60000==0 && 59-((aTime/1000)%60)==0) || minutos-aTime/60000>4000000000){ 
@@ -1861,7 +1835,7 @@ void domination(){
         }
         timeCalcVar = (millis()- xTime)%1000;
 
-        if( timeCalcVar >= 0 && timeCalcVar <= 20)
+        if( timeCalcVar <= 20)
         {
           digitalWrite(GREENLED, HIGH);  
           if(soundEnable)tone(tonepin,tonoAlarma1,200);
@@ -1898,9 +1872,9 @@ void gameOver(){
   digitalWrite(GREENLED, LOW);
   digitalWrite(REDLED, LOW);
   while(!defuseando){
-    keypad.getKey();
+    kpd.getKey();
     if(defuseando){
-      keypad.getKey();
+      kpd.getKey();
       break;
     }
     lcd.clear();
@@ -1920,9 +1894,9 @@ void gameOver(){
       digitalWrite(REDLED, HIGH);
     }
     delay(3000);
-    keypad.getKey();
+    kpd.getKey();
     if(defuseando){
-      keypad.getKey();
+      kpd.getKey();
       break;
     }
     cls();
@@ -1930,7 +1904,7 @@ void gameOver(){
     lcd.setCursor(5,1);
     printTimeDom(redTime,false);
     delay(3000);
-    keypad.getKey();
+    kpd.getKey();
     if(defuseando){
       
       break;
@@ -1940,9 +1914,9 @@ void gameOver(){
     lcd.setCursor(5,1);
     printTimeDom(greenTime,false);
     delay(3000);
-    keypad.getKey();
+    kpd.getKey();
     if(defuseando){
-      keypad.getKey();
+      kpd.getKey();
       break;
     }
   }
@@ -1953,7 +1927,7 @@ void gameOver(){
   lcd.print("A : Yes B : No");
   while(1)
   {
-    var = keypad.waitForKey();
+    var = kpd.waitForKey();
     if(var == 'a' ){
       tone(tonepin,2400,30);
       cls();
