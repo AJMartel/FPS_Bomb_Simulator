@@ -54,7 +54,7 @@ Configurable up to 7 Languages
 ### Currently 5 Game modes for FPS (Airsoft/Paintball/LaserTag)
   - **[Search and Destroy](#search-and-destroy)**
   - **[Sabotage](#sabotage)**
-  - **[Armed!](#armed!)**
+  - **[Armed!](#armed)**
   - **[Domination](#domination)**
   - **[Conquered](#conquered)**
 
