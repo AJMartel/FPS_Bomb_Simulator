@@ -261,7 +261,7 @@ LaserTag Module (http://www.lasertagparts.com/mtformat-2.htm)
 - https://github.com/duinoWitchery/hd44780
 
 
-### What\'s left on the project (as of 2020/02/24):
+### What\'s left on the project (as of 2022/07/01):
 - [ ] Finish writing and upload the source code (currently v1.99.A)
 - [ ] ReDesign and print circuit board then sent to China for fabrication
   - [ ] Required to use all available functionality of the device (version 1.2)
