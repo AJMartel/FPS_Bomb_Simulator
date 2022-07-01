@@ -1,16 +1,18 @@
 [comment]: # (Start Markdown Notes)
-# 3DFabXYZ.com FPS Bomb Simulator v1.X
+# FPS Bomb Simulator v1.99.A
 ## MEGA2560 BASIC Model:
-- Sketch uses 40128 bytes (15%) of program storage space. Maximum is 253952 bytes.
-- Global variables use 1243 bytes (15%) of dynamic memory, leaving 6949 bytes for local variables. Maximum is 8192 bytes.
+- Sketch uses 45506 bytes (17%) of program storage space. Maximum is 253952 bytes.
+- Global variables use 1261 bytes (15%) of dynamic memory, leaving 6931 bytes for local variables. Maximum is 8192 bytes.
 
 ### Language Menu
-Configurable up to 5 Languages
+Configurable up to 7 Languages
  - "English"
  - "French"
  - "Spanish"
  - "Portugues"
  - "German"
+ - "Italian"
+ - "Dutch"
 
   **Note: Only English characters are printed on LCD using 2004 Charater display**
 
@@ -50,28 +52,28 @@ Configurable up to 5 Languages
      * possibly the MPU6050 i2c module to replace the sw420 Module
 
 ### Currently 5 Game modes for FPS (Airsoft/Paintball/LaserTag)
-  - **Search and Destroy**
-  - **Sabotage**
-  - **Armed!**
-  - **Domination**
-  - **Conquered**
+  - **[Search and Destroy](#search-and-destroy)**
+  - **[Sabotage](#sabotage)**
+  - **[Armed!](#armed!)**
+  - **[Domination](#domination)**
+  - **[Conquered](#conquered)**
 
 ### and 1 Game mode for Escape Rooms
-  - **Escape Room**
+  - **[Escape Room](#escape-room)**
 
 ##    Search and Destroy
 #### In this game mode the device acts as a bomb.
 1. When the "button" mode is used:
-      1.   The Red button Arms the bomb.
+      1.  The Red button Arms the bomb.
       2.  The Green button Disarms the bomb.
 2. When the "Passcode" mode is used:
-      1.   The time for Passcode entry has a programable time limit.
+      1.  The time for Passcode entry has a programable time limit.
       2.  "A" is used to initialize the passcode entry to Arm the bomb.
-      3. "D" is used to initialize the passcode entry to Disarm the bomb.
+      3.  "D" is used to initialize the passcode entry to Disarm the bomb.
       4.  You can set the length of the passcode to a value between 04 and 16 digits
-      5.   The "Passcode hint" system is available.
+      5.  The "Passcode hint" system is available.
 3. Common for both "passcode" and "button" modes:
-      1.  The bomb can be armed and defused only once.
+      1.  The bomb can be armed only once.
       2.  The bomb has to be defended by the GREEN team for the duration of the Game Time.
       3.  The attacking RED team's objective is to arm the bomb and once it is armed, they must prevent the GREEN team from defusing it, until it detonates.
 4. There are three ways to finish the game.
@@ -79,21 +81,21 @@ Configurable up to 5 Languages
       2.  The RED team was successful in placing and arming the bomb, but unable to prevent the GREEN team from disarming it; The GREEN team wins.
       3.  The RED team was successful in placing and arming the bomb, the GREEN team fails to disarm it and the bomb detonates; The RED team wins.
 
-
 ##    Sabotage
 #### In this game mode the device acts as a bomb.
 1. When the "button" mode is used:
-      1.   The Red button Arms the bomb.
+      1.  The Red button Arms the bomb.
       2.  The Green button Disarms the bomb.
 2. When the "Passcode" mode is used:
-      1.   "A" is used to initialize the passcode entry to Arm the bomb.
+      1.  "A" is used to initialize the passcode entry to Arm the bomb.
       2.  "D" is used to initialize the passcode entry to Disarm the bomb.
-      3. You can set the length of the passcode to a value between 04 and 16 digits
+      3.  You can set the length of the passcode to a value between 04 and 16 digits
       4.  The "Passcode hint" system is available.
 3. Common for both "passcode" and "button" modes:
-      1.  The bomb can be armed and defused as many times as the game time allows.
-      2.  The bomb has to be defended by the GREEN team during Game Time.
-      3.  The attacking RED team's objective is to arm the bomb and once armed must prevent the GREEN team from defusing it, until it detonates.
+      1.  The game time resets itself every time the "Bomb" changes from armed to disarmed and vice versa.
+      2.  The bomb can be armed and disarmed multiple times without ending the game.
+      3.  The defending GREEN team's objective is to prevent the RED team from arming the bomb, until the game time expires.
+      4.  The attacking RED team's objective is to arm the bomb and once armed must prevent the GREEN team from defusing it, until it detonates.
 4. There are two ways to finish the game.
       1.  The Game time expires and the RED team was unsuccessful in placing and arming the bomb; the GREEN team wins.
       2.  The RED team was successful in placing and arming the bomb, the GREEN team fails to disarm it and the bomb detonates; The RED team wins.
@@ -101,31 +103,17 @@ Configurable up to 5 Languages
 ##    Armed!
 #### In this game mode the device acts as a planted bomb.
 1. When the "button" mode is used:
-      1.   The Green button Disarms bomb.
+      1.  The Green button Disarms bomb.
 2. When the "Passcode" mode is used:
-      1.   The time for Passcode entry has a programable time limit.
+      1.  The time for Passcode entry has a programable time limit.
       2.  "D" is used to initialize the passcode entry to Disarm the bomb.
-      3. You ca set the length of the passcode to a value between 04 and 16 digits
+      3.  You can set the length of the passcode to a value between 04 and 16 digits
       4.  The "Passcode hint" system is available.
 3. Common for both "passcode" and "button" modes:
       1.  The bomb starts armed with the countdown to detonation already triggered.
 4. There are two ways to finish the game.
-      1.  The bomb time expires and the GREEN team was unsuccessful in disarming the bomb, and the bomb detonates; The RED team wins.
+      1.  The GREEN team was unsuccessful in disarming the bomb before the bomb time expires and the bomb detonates; The RED team wins.
       2.  The GREEN team succeeds in disarming the bomb; The GREEN team wins.
-
-##    Escape Room:
-#### In this game mode the device acts as a planted bomb and key safe.
-1. Only the "Passcode" mode is available:
-      1.   The time for Passcode entry has a programable time limit.
-      2.  "D" is used to initialize the passcode entry to Disarm the bomb.
-      3. You ca set the length of the passcode to a value between 04 and 16 digits
-      4.  "hint" system is unavailable.
-      5.   "cutwire" module is unavailable.
-2. In this mode:
-      1.  The bomb starts armed with the countdown to detonation already triggered.
-3. There are two ways to finish the game.
-      1.  The bomb time expires and the GREEN team was unsuccessful in disarming the bomb, and the bomb detonates; Game Over.
-      2.  The GREEN team succeeds in disarming the bomb; The Key Box Opens.
 
 ##    Domination
 #### In this game mode the device acts as a base.
@@ -161,6 +149,21 @@ Configurable up to 5 Languages
     6.  When auto neutralize zone is enabled teams can recapture the zone to reset the auto neutralize time.
 3. The only way to win is:
     1.  The team that has a total time in control of the base equal to the specified time wins.
+
+##    Escape Room
+#### In this game mode the device acts as a planted bomb and key safe.
+1. Only the "Passcode" mode is available:
+      1.  The time for Passcode entry has a programable time limit.
+      2.  "D" is used to initialize the passcode entry to Disarm the bomb.
+      3.  You ca set the length of the passcode to a value between 04 and 16 digits
+      4.  "hint" system and "cutwire" module are unavailable.
+2. In this mode:
+      1.  The bomb starts armed with the countdown to detonation already triggered.
+3. There are two ways to finish the game.
+      1.  The GREEN team was unsuccessful in disarming the bomb before the bomb time expires and the bomb detonates; The GREEN team Looses.
+      2.  The GREEN team succeeds in disarming the bomb; The Key Box Opens and the GREEN team wins.
+
+##    Additional Notes
 
 ####    To test
 - [ ] Quick Game Menus
@@ -237,7 +240,7 @@ LaserTag Module (http://www.lasertagparts.com/mtformat-2.htm)
 - [ ] Static sound on **tonePin2** pin
 - [ ] Change VibrationSensor Pin
 
-### Notes
+### References
 - [Air Open Soft](http://www.soft-r.fr/index.php?p=accueil)
 - [Arduino stackexchange.com](https://arduino.stackexchange.com/questions/14647/how-can-i-detect-a-disconnected-pin)
 - [Electronics stackexchange.com](https://electronics.stackexchange.com/questions/83133/arduino-digitalread-reading-wrong)
@@ -255,6 +258,7 @@ LaserTag Module (http://www.lasertagparts.com/mtformat-2.htm)
 - Control LCD backlight
 - https://e-radionica.com/en/blog/hum-digital-potentiometer-10k/
 - MCP4018 I2C 10KOhm 128 steps
+- https://github.com/duinoWitchery/hd44780
 
 
 ### What\'s left on the project (as of 2020/02/24):
